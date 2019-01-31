@@ -3,9 +3,11 @@ import flask
 
 from dnstwister import app
 import dnstwister.tools as tools
+import dnstwister.auth as auth
 
 
 @app.route('/analyse/<hexdomain>')
+@auth.login_required
 def analyse(hexdomain):
     """Do a domain analysis."""
     domain = tools.parse_domain(hexdomain)
