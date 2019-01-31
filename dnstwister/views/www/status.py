@@ -5,9 +5,11 @@ import flask
 import requests
 
 from dnstwister import app
+import dnstwister.auth as auth
 
 
 @app.route(r'/status')
+@auth.login_required
 def status():
     """Status page."""
     try:
