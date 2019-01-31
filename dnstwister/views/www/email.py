@@ -6,6 +6,7 @@ import flask
 from dnstwister import app, emailer, repository, stats_store
 import dnstwister.tools as tools
 import dnstwister.tools.email as email_tools
+import dnstwister.auth as auth
 
 
 ERRORS = (
@@ -15,6 +16,7 @@ ERRORS = (
 
 @app.route('/email/subscribe/<hexdomain>')
 @app.route('/email/subscribe/<hexdomain>/<error>')
+@auth.login_required
 def email_subscribe_get_email(hexdomain, error=None):
     """Handle subscriptions."""
     domain = tools.parse_domain(hexdomain)
@@ -43,6 +45,7 @@ def email_subscribe_get_email(hexdomain, error=None):
 
 
 @app.route('/email/pending_verify/<hexdomain>', methods=['POST'])
+@auth.login_required
 def email_subscribe_pending_confirm(hexdomain):
     """Send a confirmation email for a user."""
     domain = tools.parse_domain(hexdomain)
@@ -82,6 +85,7 @@ def email_subscribe_pending_confirm(hexdomain):
 
 
 @app.route('/email/verify/<verify_code>')
+@auth.login_required
 def email_subscribe_confirm_email(verify_code):
     """Handle email verification."""
     pending_verify = repository.get_proposition(verify_code)
@@ -104,6 +108,7 @@ def email_subscribe_confirm_email(verify_code):
 
 
 @app.route('/email/unsubscribe/<sub_id>')
+@auth.login_required
 def unsubscribe_user(sub_id):
     """Unsubscribe a user from a domain."""
     repository.unsubscribe(sub_id)
@@ -111,6 +116,7 @@ def unsubscribe_user(sub_id):
 
 
 @app.route('/email/<sub_id>/noisy')
+@auth.login_required
 def email_view_noisy_domains(sub_id):
     """Show the noisy domains not sent in the email.
 
