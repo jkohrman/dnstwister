@@ -1,10 +1,13 @@
 """Google Authentication View Decorators."""
 from functools import wraps
 from flask import request, redirect, url_for, session
+import os
 
 def login_required(view):
     @wraps(view)
     def is_authenticated(*args, **kwargs):
+        if os.getenv('GOOGLE_AUTH') == 'false':
+            return view (*args, **kwargs)
         access_token = session.get('access_token')
         if access_token is None:
             return redirect(url_for('login'))
