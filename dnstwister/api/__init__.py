@@ -10,6 +10,7 @@ from flask import current_app
 from dnstwister.api.checks import parked
 from dnstwister.api.checks import safebrowsing
 from dnstwister import tools
+import dnstwister.auth as auth
 
 
 app = flask.Blueprint('api', __name__)
@@ -19,6 +20,7 @@ ENDPOINTS = ('parked_score', 'resolve_ip', 'fuzz')
 
 
 @app.route('/')
+@auth.login_required
 def api_definition():
     """API definition."""
     return flask.jsonify({
@@ -58,6 +60,7 @@ def standard_api_values(domain, skip=''):
 
 
 @app.route('/whois/<hexdomain>')
+@auth.login_required
 def whois(hexdomain):
     """Returns whois information."""
     domain = tools.parse_domain(hexdomain)
@@ -82,6 +85,7 @@ def whois(hexdomain):
 
 
 @app.route('/parked/<hexdomain>')
+@auth.login_required
 def parked_score(hexdomain):
     """Calculates "parked" scores from 0-1."""
     domain = tools.parse_domain(hexdomain)
@@ -101,6 +105,7 @@ def parked_score(hexdomain):
 
 
 @app.route('/safebrowsing/<hexdomain>')
+@auth.login_required
 def safebrowsing_check(hexdomain):
     """Returns number of hits in Google Safe Browsing."""
     domain = tools.parse_domain(hexdomain)
@@ -115,6 +120,7 @@ def safebrowsing_check(hexdomain):
 
 
 @app.route('/ip/<hexdomain>')
+@auth.login_required
 def resolve_ip(hexdomain):
     """Resolves Domains to IPs."""
     domain = tools.parse_domain(hexdomain)
@@ -133,6 +139,7 @@ def resolve_ip(hexdomain):
 
 
 @app.route('/to_hex/<domain>')
+@auth.login_required
 def domain_to_hex(domain):
     """Helps you convert domains to hex."""
     hexdomain = tools.encode_domain(domain)
@@ -145,6 +152,7 @@ def domain_to_hex(domain):
 
 
 @app.route('/fuzz/<hexdomain>')
+@auth.login_required
 def fuzz(hexdomain):
     """Calculates the dnstwist "fuzzy domains" for a domain."""
     domain = tools.parse_domain(hexdomain)
@@ -167,6 +175,7 @@ def fuzz(hexdomain):
 
 
 @app.route('/fuzz_chunked/<hexdomain>')
+@auth.login_required
 def fuzz_chunked(hexdomain):
     """Return a chunked json fuzz based on jsonpipe by eBay."""
     domain = tools.parse_domain(hexdomain)
