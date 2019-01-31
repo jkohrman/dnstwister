@@ -3,6 +3,7 @@ import flask
 
 from dnstwister import app
 import dnstwister.tools as tools
+import dnstwister.auth as auth
 
 
 # Possible rendered errors, indexed by integer in 'error' GET param.
@@ -15,6 +16,7 @@ ERRORS = (
 
 @app.route(r'/')
 @app.route(r'/error/<error_arg>')
+@auth.login_required
 def index(error_arg=None):
     """Main page."""
     error = None
