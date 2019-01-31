@@ -6,6 +6,7 @@ import flask
 from dnstwister import app
 from dnstwister.configuration import features
 import dnstwister.tools as tools
+import dnstwister.auth as auth
 
 
 def html_render(domain):
@@ -115,6 +116,7 @@ def csv_render(domain):
 
 
 @app.route('/search', methods=['POST'])
+@auth.login_required
 def search_post():
     """Handle form submit."""
     try:
@@ -175,6 +177,7 @@ def handle_invalid_domain(search_term_as_hex):
 
 
 @app.route('/search')
+@auth.login_required
 def search_async():
     """Chunked endpoint supporting search."""
     encoded_domain_parameter = flask.request.args.get('ed')
@@ -192,6 +195,7 @@ def search_async():
 
 @app.route('/search/<search_domain>')
 @app.route('/search/<search_domain>/<fmt>')
+@auth.login_required
 def search(search_domain, fmt=None):
     """Handle redirect from form submit."""
     domain = tools.parse_post_data(search_domain)
