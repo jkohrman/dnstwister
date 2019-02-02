@@ -8,6 +8,9 @@ this file.
 import flask
 import flask_cache
 import logging
+import os
+
+from flask import session
 
 import mail.sendgridservice
 import storage.pg_database
@@ -24,6 +27,9 @@ stats_store = storage.redis_stats_store.RedisStatsStore()
 # Logging
 app.logger.setLevel(logging.INFO)
 
+# Session
+app.secret_key = os.getenv('SESSION_SECRET')
+
 # Blueprints
 import api
 app.register_blueprint(api.app, url_prefix='/api')
@@ -39,6 +45,7 @@ import views.www.help
 import views.www.index
 import views.www.search
 import views.www.status
+import views.www.login
 
 # Filters
 app.jinja_env.filters['domain_renderer'] = tools.template.domain_renderer
