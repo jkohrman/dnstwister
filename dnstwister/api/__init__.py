@@ -25,6 +25,10 @@ def api_definition():
     """API definition."""
     return flask.jsonify({
         'url': flask.request.base_url,
+        'domain_fuzzer_url': tools.api_url(fuzz, 'domain_as_hexadecimal')
+    })
+    return flask.jsonify({
+        'url': flask.request.base_url,
         'domain_to_hexadecimal_url': tools.api_url(domain_to_hex, 'domain'),
         'domain_fuzzer_url': tools.api_url(fuzz, 'domain_as_hexadecimal'),
         'parked_check_url': tools.api_url(parked_score, 'domain_as_hexadecimal'),
